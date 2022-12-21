@@ -1,0 +1,19 @@
+{
+  "name": "products-service",
+  "version": "0.0.1",
+  "description": "Products service for Project Atelier API",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SDCBlueWhale/products-service.git"
+  },
+  "author": "Phea Duch",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SDCBlueWhale/products-service/issues"
+  },
+  "homepage": "https://github.com/SDCBlueWhale/products-service#readme"
+}
