@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS public.products;
 CREATE TABLE public.products (
 	id serial NOT NULL,
 	"name" varchar(255) NOT NULL,
+  slogan varchar(255) NOT NULL,
 	description text NULL,
 	category varchar(255) NOT NULL,
 	default_price int NULL,
@@ -47,7 +48,7 @@ CREATE TABLE public.skus (
 	id serial NOT NULL,
 	style_id int NOT NULL,
 	"size" varchar(255) NOT NULL,
-	column1 int NULL DEFAULT 0,
+	quantity int NULL DEFAULT 0,
 	CONSTRAINT skus_pk PRIMARY KEY (id),
 	CONSTRAINT skus_fk FOREIGN KEY (style_id) REFERENCES public.styles(id)
 );
