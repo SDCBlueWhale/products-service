@@ -1,0 +1,28 @@
+syntax = "proto3";
+package products.v1;
+
+service ProductsService {
+  rpc Get (GetRequest) returns (GetResponse) {}
+}
+
+message Product {
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+  string category = 4;
+  uint32 default_price = 5;
+
+  message Feature {
+    string feature = 1;
+    string value = 2;
+  }
+  repeated Feature features = 6;
+}
+
+message GetRequest {
+  int32 id = 1;
+}
+
+message GetResponse {
+  Product product = 1;
+}

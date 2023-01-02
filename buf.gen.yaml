@@ -1,0 +1,9 @@
+version: v1
+managed:
+  enabled: true
+plugins:
+  - name: ts
+    out: src/gen
+    strategy: all
+    path: ./node_modules/ts-proto/protoc-gen-ts_proto
+    opt: esModuleInterop=false,outputServices=nice-grpc,outputServices=generic-definitions,useExactTypes=false

@@ -3,12 +3,12 @@
   "version": "0.0.1",
   "description": "Products service for Project Atelier API",
   "main": "src/index.js",
-  "type": "module",
   "scripts": {
     "test": "npm test",
     "db:clean": "psql -U pd -d sdc -f init_db.sql",
     "db:load-full": "npm run db:clean && psql -U pd -d sdc -f load_db.sql",
-    "db:load-testdb": "npm run db:clean && node build/load_csv.js"
+    "db:load-testdb": "npm run db:clean && node build/load_csv.js",
+    "ts:build": "rm build/* && tsc"
   },
   "repository": {
     "type": "git",
@@ -21,17 +21,20 @@
   },
   "homepage": "https://github.com/SDCBlueWhale/products-service#readme",
   "dependencies": {
-    "csv-parser": "^3.0.0",
+    "@grpc/grpc-js": "^1.8.0",
+    "@grpc/proto-loader": "^0.7.4",
     "dotenv": "^16.0.3",
-    "heapdump": "^0.3.15",
+    "long": "^5.2.1",
+    "nice-grpc": "^2.0.1",
     "pg": "^8.8.0",
-    "through2": "^4.0.2"
+    "protobufjs": "^7.1.2"
   },
   "devDependencies": {
-    "@types/heapdump": "^0.3.1",
     "@types/node": "^18.11.17",
     "@types/pg": "^8.6.5",
     "@types/pg-format": "^1.0.2",
-    "@types/through2": "^2.0.38"
+    "grpc_tools_node_protoc_ts": "^5.3.2",
+    "grpc-tools": "^1.12.3",
+    "ts-proto": "^1.136.1"
   }
 }

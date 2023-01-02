@@ -61,3 +61,26 @@ CREATE TABLE public.photos (
 	CONSTRAINT photos_pk PRIMARY KEY (id),
 	CONSTRAINT photos_fk FOREIGN KEY (style_id) REFERENCES public.styles(id)
 );
+
+-- indexes
+CREATE INDEX styles_product_id_index ON styles (product_id);
+CREATE INDEX features_product_id ON features (product_id);
+CREATE INDEX photos_style_id_index ON photos (style_id);
+CREATE INDEX skus_style_id_index ON skus (style_id);
+CREATE INDEX related_current_product_id_index ON related (current_product_id);
+
+-- types
+CREATE TYPE photo AS (
+  url varchar,
+  thumbnail_url varchar
+);
+
+CREATE TYPE feature AS (
+    feature varchar(255),
+    value varchar(255)
+);
+
+CREATE TYPE sku AS (
+	quantity int,
+	size varchar(32)
+);
