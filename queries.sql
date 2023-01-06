@@ -40,13 +40,12 @@ LEFT JOIN LATERAL (
     WHERE public.styles.id = p.style_id
 ) p ON TRUE
 LEFT JOIN LATERAL (
-    SELECT json_agg(cast(row(s.quantity, s.size) AS sku) ORDER BY s.id) AS skus
+    SELECT json_object_agg(s.id, to_json(cast(row(s.quantity, s.size) AS sku))) AS skus
     FROM public.skus s
     WHERE public.styles.id = s.style_id
 ) s ON TRUE
 WHERE
     public.styles.product_id = 1;
-
 
 -- GET /products/:product_id/related
 SELECT related_product_id FROM related WHERE related.current_product_id = 1;

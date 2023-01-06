@@ -67,27 +67,27 @@ GROUP BY
 
 app.get('/products/:product_id/styles', async (req, res) => {
   const query = `SELECT
-    public.styles.id AS style_id,
-    public.styles.name,
-    public.styles.sale_price,
-    public.styles.original_price,
-    public.styles.default_style,
-    photos,
-    skus
+  public.styles.id AS style_id,
+  public.styles.name,
+  public.styles.sale_price,
+  public.styles.original_price,
+  public.styles.default_style,
+  photos,
+  skus
 FROM
-    public.styles
+  public.styles
 LEFT JOIN LATERAL (
-    SELECT json_agg(cast(row(p.url, p.thumbnail_url) AS photo) ORDER BY p.id) AS photos
-    FROM photos p
-    WHERE public.styles.id = p.style_id
+  SELECT json_agg(cast(row(p.url, p.thumbnail_url) AS photo) ORDER BY p.id) AS photos
+  FROM photos p
+  WHERE public.styles.id = p.style_id
 ) p ON TRUE
 LEFT JOIN LATERAL (
-    SELECT json_agg(cast(row(s.quantity, s.size) AS sku) ORDER BY s.id) AS skus
-    FROM public.skus s
-    WHERE public.styles.id = s.style_id
+  SELECT json_object_agg(s.id, to_json(cast(row(s.quantity, s.size) AS sku))) AS skus
+  FROM public.skus s
+  WHERE public.styles.id = s.style_id
 ) s ON TRUE
 WHERE
-    public.styles.product_id = $1;`;
+  public.styles.product_id = $1`;
 
   const db = await app.pg.connect();
   try {
