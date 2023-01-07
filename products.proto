@@ -1,0 +1,77 @@
+syntax = "proto3";
+package products.v1;
+
+service ProductsService {
+  rpc Get (GetRequest) returns (GetResponse) {}
+  rpc List (ListRequest) returns (ListResponse) {}
+  rpc GetStyles (GetStylesRequest) returns (GetStylesResponse) {}
+  rpc GetRelated (GetRelatedRequest) returns (GetRelatedResponse) {}
+}
+
+message Product {
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+  string category = 4;
+  uint32 default_price = 5;
+
+  message Feature {
+    string feature = 1;
+    string value = 2;
+  }
+  repeated Feature features = 6;
+}
+
+message GetRequest {
+  int32 id = 1;
+}
+
+message GetResponse {
+  Product product = 1;
+}
+
+message ListRequest {
+  int32 page = 1;
+  int32 count = 2;
+}
+
+message ListResponse {
+  repeated Product products = 1;
+}
+
+message Style {
+  int32 style_id = 1;
+  string name = 2;
+  int32 original_price = 3;
+  int32 sale_price = 4;
+  bool default = 5;
+
+  message Photo {
+    string thumbnail_url = 1;
+    string url = 2;
+  }
+  repeated Photo photos = 6;
+
+  message Sku {
+    int32 quantity = 1;
+    string size = 2;
+  }
+  map<string, Sku> skus = 7;
+}
+
+message GetStylesRequest {
+  int32 product_id = 1;
+}
+
+message GetStylesResponse {
+  int32 product_id = 1;
+  repeated Style results = 2;
+}
+
+message GetRelatedRequest {
+  int32 product_id = 1;
+}
+
+message GetRelatedResponse {
+  repeated int32 related = 1;
+}
