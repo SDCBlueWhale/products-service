@@ -1,0 +1,26 @@
+version: '3'
+volumes:
+  db-data:
+
+services:
+  server:
+    image: phea/sdc-api-server:latest
+    container_name: api-server
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 3000:3000
+    networks:
+      - app-network
+  db:
+    image: phea/sdc-db:latest
+    container_name: db
+    restart: always
+    volumes:
+      - ./testdata/:/import_data/
+      - ./db_scripts/:/docker-entrypoint-initdb.d/
+    ports:
+      - 6666:5432
+    networks:
+      - app-network

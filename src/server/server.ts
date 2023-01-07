@@ -6,7 +6,11 @@ const app = Fastify({});
 (async () => {
   await app.register(compression, { encodings: ['gzip', 'deflate'], global: true });
   await app.register(postgres, {
-    connectionString: 'postgres://pd:dumb1234@localhost/sdc',
+    host: 'db',
+    port: 5432,
+    user: 'pd',
+    password: 'dumb1234',
+    database: 'sdc',
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
     max: 20,
@@ -33,6 +37,7 @@ WHERE
     return res.type('application/json').send(rows);
   } catch (err) {
     console.log('db error:', err);
+    return res.code(500);
   } finally {
     db.release();
   }
@@ -60,6 +65,7 @@ GROUP BY
     return res.type('application/json').send(rows[0]);
   } catch (err) {
     console.log('db error:', err);
+    return res.code(500);
   } finally {
     db.release();
   }
@@ -95,6 +101,7 @@ WHERE
     return res.type('application/json').send(rows);
   } catch (err) {
     console.log('db error:', err);
+    return res.code(500);
   } finally {
     db.release();
   }
@@ -107,6 +114,7 @@ app.get('/products/:product_id/related', async (req, res) => {
     const { rows } = await db.query(query, [req.params['product_id']]);
     return res.type('application/json').send(rows[0].array);
   } catch (err) {
+    return res.code(500);
     console.log('db error:', err);
   } finally {
     db.release();
@@ -114,8 +122,9 @@ app.get('/products/:product_id/related', async (req, res) => {
 });
 
 const start = async () => {
+  console.log('what is my process env', process.version);
   try {
-    await app.listen({ port: port });
+    await app.listen({ port: port, host: '0.0.0.0' });
   } catch (err) {
     console.log('unable to start server:', err);
     process.exit(1);

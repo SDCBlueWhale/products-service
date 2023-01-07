@@ -84,3 +84,11 @@ CREATE TYPE sku AS (
 	quantity int,
 	size varchar(32)
 );
+
+-- Load data
+COPY public.products FROM '/import_data/products.csv' DELIMITER ',' CSV HEADER;
+COPY public.styles FROM '/import_data/styles.csv' DELIMITER ',' CSV NULL AS 'null' HEADER;
+COPY public.features FROM '/import_data/features.csv' DELIMITER ',' CSV HEADER;
+COPY public.related FROM '/import_data/related.csv' DELIMITER ',' CSV HEADER;
+COPY public.skus FROM '/import_data/skus.csv' DELIMITER ',' CSV HEADER;
+COPY public.photos FROM '/import_data/photos.csv' DELIMITER ',' CSV HEADER;

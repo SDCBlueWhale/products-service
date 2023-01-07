@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: load-data-config
+  labels:
+    app: sdc
+data:
+  load_db.sql: |-
+    -- Load data
+    \COPY public.products FROM '/work-dir/products.csv' DELIMITER ',' CSV HEADER;
+    \COPY public.styles FROM '/work-dir/styles.csv' DELIMITER ',' CSV NULL AS 'null' HEADER;
+    \COPY public.features FROM '/work-dir/features.csv' DELIMITER ',' CSV HEADER;
+    \COPY public.related FROM '/work-dir/related.csv' DELIMITER ',' CSV HEADER;
+    \COPY public.skus FROM '/work-dir/skus.csv' DELIMITER ',' CSV HEADER;
+    \COPY public.photos FROM '/work-dir/photos.csv' DELIMITER ',' CSV HEADER;
+  load.sh: |-
+    #!/bin/bash
+    IDS=('1r3LBqzB8ibdd86goWl-mua81HhuHqVDi' '1FF-6nY7dLHrddYc5ynG9eWvNp3ukiP_F' '1HJ5bYXIV8I04R5OfFeD7B6kHsgo-XuSS' '11HIUqqHQqo5pZ_ItLC6iOnTImbmdZ811' '1j6N_ZomlgVIdNU8BL4HRFkDt0ofSgZpQ' '1HLF9002SANdrUmKtTsNgyYPvdtiDVz_a')
+    NAMES=('products.csv' 'styles.csv' 'features.csv' 'related.csv' 'skus.csv' 'photos.csv')
+    for i in "${!IDS[@]}"; do
+      wget --no-check-certificate 'https://drive.google.com/uc?export=download&id='"${IDS[i]}" -O /work-dir/${NAMES[i]}
+    done
+
+    export PGPASSWORD=dumb1234
+    psql -U pd -d sdc -p 5432 -h db -f /data/load_db.sql
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load-data
+spec:
+  template:
+    spec:
+      containers:
+        - name: alpine
+          image: postgres:14.6-alpine3.17
+          command: ["bash", "/data/load.sh"]
+          volumeMounts:
+            - name: workdir
+              mountPath: "/work-dir"
+            - name: load-data-config
+              mountPath: "/data"
+      restartPolicy: Never
+      volumes:
+        - name: workdir
+          emptyDir: {}
+        - name: load-data-config
+          configMap:
+            name: load-data-config
