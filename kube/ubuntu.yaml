@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ubuntu
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ubuntu
+    spec:
+      containers:
+        - name: ubuntu
+          image: ubuntu
+          command:
+            - sleep
+            - "infinity"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ubuntu-service
+spec:
+  selector:
+    app: ubuntu
+  ports:
+    - name: ubuntu-port
+      port: 8080
+      targetPort: 8080
+      nodePort: 30080
+  type: NodePort
